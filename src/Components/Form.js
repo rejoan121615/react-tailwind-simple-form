@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useFormHandler from "../hooks/useFormHandler";
 
 const Form = (props) => {
-    // form hook for email 
+    // form hook for email
     const {
         inputData: emailVal,
         errorMsg: emailError,
@@ -10,7 +10,7 @@ const Form = (props) => {
         blurHandler: emailBlur,
         changeHandler: emailChange,
     } = useFormHandler();
-    //  phone number  
+    //  phone number
     const {
         inputData: phoneVal,
         errorMsg: phoneError,
@@ -18,7 +18,7 @@ const Form = (props) => {
         blurHandler: phoneBlur,
         changeHandler: phoneChange,
     } = useFormHandler();
-    //  full name number  
+    //  full name number
     const {
         inputData: nameVal,
         errorMsg: nameError,
@@ -27,7 +27,7 @@ const Form = (props) => {
         changeHandler: nameChange,
     } = useFormHandler();
 
-    //  full message   
+    //  full message
     const {
         inputData: msgVal,
         errorMsg: msgError,
@@ -35,7 +35,7 @@ const Form = (props) => {
         blurHandler: msgBlur,
         changeHandler: msgChange,
     } = useFormHandler();
-    // password one 
+    // password one
     const {
         inputData: password1Val,
         errorMsg: password1Error,
@@ -43,7 +43,7 @@ const Form = (props) => {
         blurHandler: password1Blur,
         changeHandler: password1Change,
     } = useFormHandler();
-    // password two 
+    // password two
     const {
         inputData: password2Val,
         errorMsg: password2Error,
@@ -52,19 +52,39 @@ const Form = (props) => {
         changeHandler: password2Change,
     } = useFormHandler();
 
+    // compare password
+    const [password, setPassword] = useState([]);
+    const [passError, setPassError] = useState(false);
+    const [passErrorMsg, setPassErrorMsg] = useState("Fill this form");
 
+    const comparePass = (val1, val2) => {
+        const firstPass = val1.toString();
+        const secPass = val2.toString();
+        if (firstPass === secPass) {
+            return true;
+        }
+        return false;
+    };
 
+    const generateMessage = (event) => {
+        password2Change(event);
+        console.log('pass 1', password1Val, 'pass 2', password2Val)
+        console.log(comparePass(password1Val, password2Val));
+        if (comparePass(password1Val, password2Val)) {
+            return setPassErrorMsg("")
+        }
+        return setPassErrorMsg("Fill this form")
+    };
 
-
-    // submit handler 
+    // submit handler
     const submitBtnHandler = (event) => {
         event.preventDefault();
         nameSubmit();
         emailSubmit();
         phoneSubmit();
-        password1Submit()
+        password1Submit();
         password2Submit();
-        msgSubmit()
+        msgSubmit();
     };
 
     return (
@@ -167,18 +187,20 @@ const Form = (props) => {
                             Retype your password
                         </label>
                         <input
-                            onChange={password2Change}
+                            onChange={(event) => {
+                                generateMessage(event);
+                            }}
                             onBlur={password2Blur}
                             value={password2Val}
                             className="px-4 py-2 w-full rounded-md"
                             type="text"
                         />
                         {/* error msg  */}
-                        {password2Error && (
+                        {
                             <p className="text-red-500 font-sans font-medium text-base mt-3">
                                 Fill this input
                             </p>
-                        )}
+                        }
                     </div>
                 </div>
                 {/* message box  */}
